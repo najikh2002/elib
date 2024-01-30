@@ -1,0 +1,18 @@
+version: "3.9"
+
+services:
+  laravelapp:
+    container_name: laravelapp
+    image: francescoxx/laravelapp:1.0.0
+    build: .
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    environment:
+      DB_CONNECTION: pgsql
+      DB_HOST: dpg-cmseo9qcn0vc73bh0g0g-a.oregon-postgres.render.com
+      DB_PORT: 5432
+      DB_DATABASE: unjayalib
+      DB_USERNAME: root
+      DB_PASSWORD: NLsdT0I5tG3weTec5zqcM3lWcL7MbVd7
