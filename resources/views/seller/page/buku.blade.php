@@ -18,7 +18,6 @@
             <button class="text-[20px] text-slate-500 font-bold" id="show_addbuku"><i class="fa fa-plus" aria-hidden="true"></i></button>
             <button class="text-[20px] text-slate-500 font-bold" id="show_buku_importmodal"><i class="fa-solid fa-file-import"></i></button>
         </div>
-        <button>import</button>
         <h3 class="text-gray-600 font-semibold py-3">Buku</h3>
 
         <table id="buku_table" class="min-w-full bg-white border border-gray-300">

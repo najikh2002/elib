@@ -97,7 +97,6 @@ class SellerController extends Controller
         $randomName = Str::random(10);
         $outputPath = "{$randomName}.png";
 
-        // ghostscript handle
         $cImgPath = storage_path("app/public/{$randomName}.png");
         $cFilePath = storage_path("app/" . $pdfPath);
 
@@ -228,17 +227,30 @@ class SellerController extends Controller
             $buku = Buku::where('kodebuku', $request->kodebuku)->first();
 
             if ($buku) {
-                // Hapus file dan sampul sebelumnya jika ada
-                if ($request->hasFile('filebuku')) {
-                    Storage::delete($buku->filebuku);
+                if($request->hasFile('filebuku')) {
+                    if($buku->filebuku) {
+                        Storage::delete($buku->filebuku);
 
-                    $sampulPath = public_path("storage/{$buku->sampulbuku}");
-                    if (File::exists($sampulPath)) {
-                        File::delete($sampulPath);
+                        $sampulPath = public_path("storage/{$buku->sampulbuku}");
+                        if (File::exists($sampulPath)) {
+                            File::delete($sampulPath);
+                        }
                     }
+                    $file = $request->file('filebuku');
+                    $nameFile = $this->randomName($request);
+                    $pdfPath = $file->storeAs('secret', $nameFile);
+                    $buku->filebuku = $pdfPath;
+
+                    $randomName = Str::random(10);
+                    $outputPath = "{$randomName}.png";
+                    $cImgPath = storage_path("app/public/{$randomName}.png");
+                    $cFilePath = storage_path("app/" . $pdfPath);
+                    $command = "gs -dFirstPage=1 -dLastPage=1 -sDEVICE=png16m -o $cImgPath $cFilePath";
+                    shell_exec($command);
+
+                    $buku->sampulbuku = $outputPath;
                 }
 
-                // Lakukan pembaruan data buku
                 $buku->judulbuku = $request->input('judulbuku_edit');
                 $buku->tahun = $request->input('tahun_edit');
                 $buku->edisi = $request->input('edisi_edit');
@@ -253,47 +265,44 @@ class SellerController extends Controller
                 $buku->sinopsis = $request->input('sinopsis_edit');
                 $buku->active = $request->input('active_edit') ? true : false;
 
-                // Proses pembaruan file dan sampul baru
-                if ($request->hasFile('filebuku')) {
-                    $file = $request->file('filebuku');
-                    $nameFile = $this->randomName($request);
-                    $pdfPath = $file->storeAs('secret', $nameFile);
-                    $buku->filebuku = $pdfPath;
-
-                    // Ghostscript handle untuk sampul baru
-                    $randomName = Str::random(10);
-                    $outputPath = "{$randomName}.png";
-                    $cImgPath = storage_path("app/public/{$randomName}.png");
-                    $cFilePath = storage_path("app/" . $pdfPath);
-                    $command = "gs -dFirstPage=1 -dLastPage=1 -sDEVICE=png16m -o $cImgPath $cFilePath";
-                    shell_exec($command);
-
-                    $buku->sampulbuku = $outputPath;
-                }
-
                 $buku->save();
 
-                 // Hapus relasi BukuPengarang yang terkait dengan buku ini
                 BukuPengarang::where('kodebuku', $request->kodebuku)->delete();
-                // Hapus relasi BukuProgramstudi yang terkait dengan buku ini
                 BukuProgramstudi::where('kodebuku', $request->kodebuku)->delete();
 
-                // Iterasi dan buat ulang relasi BukuPengarang
-                foreach ($request->input('kodepengarang_edit') as $pengarang) {
-                    $bukupengarang = [
-                        'kodebuku' => $request->kodebuku,
-                        'kodepengarang' => $pengarang,
-                    ];
-                    BukuPengarang::create($bukupengarang);
+                $pengarangs = $request->input('pengarang_edit');
+                $programstudis = $request->input('programstudi_edit');
+
+                if ($pengarangs) {
+                    foreach ($pengarangs as $kodepengarang) {
+                        $existingEntry = BukuPengarang::where('kodebuku', $request->kodebuku)
+                            ->where('kodepengarang', $kodepengarang)
+                            ->first();
+
+                        if (!$existingEntry) {
+                            $bukupengarang = [
+                                'kodebuku' => $request->kodebuku,
+                                'kodepengarang' => $kodepengarang,
+                            ];
+                            BukuPengarang::create($bukupengarang);
+                        }
+                    }
                 }
 
-                // Iterasi dan buat ulang relasi BukuProgramstudi
-                foreach ($request->input('programstudi_edit') as $kodeps) {
-                    $bukuprogramstudi = [
-                        'kodebuku' => $request->kodebuku,
-                        'kodeps' => $kodeps,
-                    ];
-                    BukuProgramstudi::create($bukuprogramstudi);
+                if ($programstudis) {
+                    foreach ($programstudis as $kodeps) {
+                        $existingEntry = BukuProgramstudi::where('kodebuku', $request->kodebuku)
+                            ->where('kodeps', $kodeps)
+                            ->first();
+
+                        if (!$existingEntry) {
+                            $bukuprogramstudi = [
+                                'kodebuku' => $request->kodebuku,
+                                'kodeps' => $kodeps,
+                            ];
+                            BukuProgramstudi::create($bukuprogramstudi);
+                        }
+                    }
                 }
 
                 return response()->json([
@@ -1149,4 +1158,47 @@ class SellerController extends Controller
         }
     }
 
+    // LAPORAN
+    public function laporan($laporan)
+    {
+        if($laporan == 'totalbaca') {
+            //
+        }
+
+        if($laporan == 'totalbacaperuser') {
+            $data = DB::table('v_totalbacaperuser')->get();
+            return view('seller.page.totalbacaperuser', compact(['data']));
+        }
+
+        if($laporan == 'totalbacaperkonten') {
+            $data = DB::table('v_totalpinjamperkonten')->get();
+            return view('seller.page.totalbacaperkonten', compact(['data']));
+        }
+
+        if($laporan == 'totalbuku') {
+            $data = DB::table('v_totalbuku')->get();
+            return view('seller.page.totalbuku', compact(['data']));
+        }
+
+        if($laporan == 'totalanggota') {
+            //
+        }
+
+        if($laporan == 'totalpengunjung') {
+            //
+        }
+
+        if($laporan == 'peminjaman') {
+            $data = DB::table('v_peminjaman')->get();
+            return view('seller.page.peminjaman', compact(['data']));
+        }
+
+        if($laporan == 'peminjam') {
+            //
+        }
+
+        if($laporan == 'pengunjung') {
+            //
+        }
+    }
 }

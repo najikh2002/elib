@@ -1,19 +1,15 @@
 @extends('layouts.app')
 
 @section('content')
-    {{-- header --}}
-    <div class="flex w-full h-[250px] bg-black">
-        test
-    </div>
+    {{-- overlay --}}
+    <div class="flex w-full h-[60px] bg-white"></div>
     {{-- navbar --}}
-    @include('components.navbar')
+    @include('components.navbar-login')
     {{-- content --}}
     <div class="flex flex-col justify-center items-center">
         <div class="flex flex-col gap-3 p-[5%] justify-center items-center">
-            <h3 class="text-[28px] md:text-[38px] uppercase font-semibold text-center">welcome to unjaya digital library</h3>
-            <p class="text-[14px] md:text-[16px] text-center w-[80%]">Explore over 170M documents from a global community, share information, and find inspiration</p>
-        </div>
-        <div class="flex items-center justify-center w-full">
+            <h3 class="text-[25px] md:text-[38px] uppercase font-semibold text-center">selamat datang di perpustakaan digital unjaya</h3>
+            <p class="text-[14px] md:text-[16px] text-center w-[80%]">Temukan e-book, jurnal, dan sumber belajar terkini untuk perjalanan akademismu. Mari mulai petualangan literasi digitalmu sekarang!</p>
             @include('components.searchbar')
         </div>
         <div class="py-4 px-[5%]">

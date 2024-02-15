@@ -8,6 +8,7 @@ use App\Models\Buku;
 use App\Models\Peminjaman;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
@@ -20,7 +21,7 @@ class UserController extends Controller
                           ->join('mpenerbit', 'buku.kodepenerbit', '=', 'mpenerbit.kodepenerbit')
                           ->join('msubyek', 'buku.kodesubyek', '=', 'msubyek.kodesubyek')
                           ->join('mjenisbuku', 'buku.kodejenisbuku', '=', 'mjenisbuku.kodejenisbuku')
-                          ->select('buku.*', 'mpenerbit.namapenerbit as namapenerbit', 'msubyek.namasubyek as namasubyek', 'mjenisbuku.namajenisbuku as namajenisbuku')
+                          ->select('buku.*', 'peminjaman.*','mpenerbit.namapenerbit as namapenerbit', 'msubyek.namasubyek as namasubyek', 'mjenisbuku.namajenisbuku as namajenisbuku')
                           ->get();
 
         return view('user.profile', compact(['anggota', 'peminjaman']));
@@ -95,6 +96,35 @@ class UserController extends Controller
             }
         }
 
+    }
+
+    public function updatephotoprofile(Request $request)
+    {
+        try {
+            $kodeanggota = $request->session()->get("kodeanggota");
+            $anggota = Anggota::where('kodeanggota', $kodeanggota)->first();
+
+            if (!$anggota) {
+                throw new \Exception('Anggota tidak ditemukan.');
+            }
+
+            $foto = $request->file('input_img_profile');
+            if (!$foto) {
+                throw new \Exception('File tidak tersedia.');
+            }
+
+            if ($anggota->foto) {
+                Storage::delete($anggota->foto);
+            }
+
+            $foto_path = $foto->storeAs('public/foto', $foto->hashName());
+
+            $anggota->update(['foto' => $foto_path]);
+
+            return response()->json(['success' => true, 'message' => 'Foto berhasil diperbarui.']);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => 'Error: ' . $e->getMessage()]);
+        }
     }
 
 

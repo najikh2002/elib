@@ -66,5 +66,6 @@ class Kernel extends HttpKernel
         'isSeller'=> \App\Http\Middleware\IsSeller::class,
         'isSellerApi' => \App\Http\Middleware\IsSellerApi::class,
         'isGuest' => \App\Http\Middleware\IsGuest::class,
+        'Cors' => \App\Http\Middleware\Cors::class,
     ];
 }

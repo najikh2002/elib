@@ -215,15 +215,14 @@
                         let pengarang = [];
                         let programstudi = [];
 
-                        $('#pengarang option:selected').each(function () {
+                        $('#pengarang_edit option:selected').each(function () {
                             pengarang.push($(this).val());
                         });
 
-                        $('#programstudi option:selected').each(function () {
+                        $('#programstudi_edit option:selected').each(function () {
                             programstudi.push($(this).val());
                         });
 
-                        // Menambahkan setiap nilai dalam array kodepengarang dan programstudi
                         for (let i = 0; i < pengarang.length; i++) {
                             formData.append('pengarang_edit[]', pengarang[i]);
                         }
@@ -232,7 +231,6 @@
                             formData.append('programstudi_edit[]', programstudi[i]);
                         }
 
-                        // Append other form data
                         formData.append("_token", token);
                         formData.append("kodebuku", id);
                         formData.append("judulbuku_edit", $('#judulbuku_edit').val());
@@ -263,13 +261,13 @@
                                 let data = res.data;
 
                                 if (status) {
-                                    alert('Buku BERHASIL DIUPDATE!');
+                                    alert('BUKU BERHASIL DIUPDATE!');
                                     $('#buku_editmodal').hide();
                                     $('#buku_editmodal').fadeOut(500, function() {
                                         location.reload(true);
                                     });
                                 } else {
-                                    alert('Buku GAGAL DIUPDATE!');
+                                    alert('BUKU GAGAL DIUPDATE!');
                                 }
                             },
                             error: function (error) {

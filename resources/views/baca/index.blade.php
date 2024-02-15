@@ -12,7 +12,7 @@
 </head>
 <body>
     <div class="flex flex-col justify-center items-center p-10 gap-5">
-        <div class="flex justify-center items-center">
+        <div class="flex justify-center items-center pt-[30px]">
             <canvas id="the-canvas" class="w-screen md:max-w-full"></canvas>
         </div>
 
@@ -28,7 +28,7 @@
                 </button>
 
                 <span class="text-gray-200">
-                    Page: <span id="page_num" class="font-semibold"></span> of <span id="page_count" class="font-semibold">{{ $countPages }}</span>
+                    Page: <input type="text" id="page_num" class="font-semibold bg-white text-black w-[30px] text-center" /> of <span id="page_count" class="font-semibold">{{ $countPages }}</span>
                 </span>
 
                 <button id="next" class="focus:outline-none">
@@ -52,7 +52,7 @@
 
         // Function to load and render PDF
         function loadAndRenderPdf() {
-          var url = `http://localhost:8000/detail/{{ $kodebuku }}/${pageNumber}/read`;
+          var url = `/detail/{{ $kodebuku }}/${pageNumber}/read`;
           document.getElementById('page_num').innerHTML = pageNumber.toString();
           document.getElementById('page_num').value = pageNumber.toString();
 
@@ -71,7 +71,7 @@
             pdf.getPage(1).then(function(page) {
               console.log('Page loaded');
 
-              var scale = 10;
+              var scale = 5.5;
               var viewport = page.getViewport({ scale: scale });
 
               // Prepare canvas using PDF page dimensions
@@ -116,6 +116,28 @@
             return pageNumber;
           }
           loadAndRenderPdf(); // Load and render the new PDF when the button is clicked
+        });
+
+        $('#page_num').on("input", function() {
+            var userPage = $('#page_num').val();
+
+            if (userPage >= 1 && userPage <= maxPages) {
+                pageNumber = parseInt(userPage);
+                loadAndRenderPdf();
+            } else if (userPage === "") {
+                // Jangan lakukan apa-apa jika input kosong
+            } else {
+                location.reload(true);
+                if (userPage < 0) {
+                    userPage = 1;
+                } else if (userPage > maxPages) {
+                    userPage = maxPages;
+                } else {
+                    console.log('Invalid Page Number');
+                }
+
+                // Setelah menyesuaikan pageNumber, reload halaman
+            }
         });
 
         // Initial load and render

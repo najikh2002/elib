@@ -4,14 +4,25 @@
         <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
             @foreach ($pinjams as $pinjam)
                 {{-- item --}}
-                <a href="/detail/{{ $pinjam->kodebuku }}" class="flex flex-col justify-center items-center p-6 shadow-md hover:shadow-lg transition-all duration-150 bg-slate-100">
+                <a href="/detail/{{ $pinjam->kodebuku }}" class="flex-shrink-0 flex flex-col justify-center items-center p-6 shadow-md hover:shadow-lg transition-all duration-150 bg-slate-100 w-full h-fit md:w-[300px] md:h-[500px]">
                     <img src="storage/{{ data_get($pinjam->buku, 'sampulbuku') }}" alt="" class="object-cover w-full h-full">
                     <h3 class="line-clamp-1 py-1 pt-3 text-center font-semibold">{{ $pinjam->buku->judulbuku }}</h3>
-                    @if($pinjam->buku->bukupengarang->count() > 1)
-                        <p class="line-clamp-1 py-1">{{ $pinjam->buku->bukupengarang[0]->pengarang->namapengarang }} dan {{ $buku->bukupengarang->count() - 1 }} lainnya</p>
-                    @else
-                        <p class="line-clamp-1 py-1">{{ $pinjam->buku->bukupengarang[0]->pengarang->namapengarang }}</p>
-                    @endif
+                    @php
+                        $authors = explode(', ', $pinjam->namapengarang);
+                        $authorCount = count($authors);
+                    @endphp
+                    <p class="line-clamp-1 py-1">
+                        @if ($authorCount)
+                            {{ $authors[0] }}
+                            @if ($authorCount > 1)
+                                @if ($authorCount == 2)
+                                    dan {{ $authors[1] }}
+                                @else
+                                    dan {{ $authorCount - 1 }} lainnya
+                                @endif
+                            @endif
+                        @endif
+                    </p>
                 </a>
             @endforeach
         </div>

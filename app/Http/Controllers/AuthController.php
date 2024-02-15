@@ -12,6 +12,7 @@ use App\Models\Msubyek;
 use App\Models\Msumberperolehan;
 use App\Models\Peminjaman;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class AuthController extends Controller
 {
@@ -62,13 +63,22 @@ class AuthController extends Controller
     public function user()
     {
         $anggota = session()->get('anggota');
-
-        $bukus = Buku::all();
-        $semuapinjam = Peminjaman::all();
-        $pinjams = $semuapinjam->where('kodeanggota', $anggota->kodeanggota)->where('tglkembali', NULL);
+        $bukus = Buku::join('bukupengarang', 'buku.kodebuku', '=', 'bukupengarang.kodebuku')
+                ->join('mpengarang', 'bukupengarang.kodepengarang', '=', 'mpengarang.kodepengarang')
+                ->select('buku.*', DB::raw('STRING_AGG(mpengarang.namapengarang, \', \') as namapengarang'))
+                ->groupBy('buku.kodebuku', 'buku.judulbuku', 'buku.tahun', 'buku.isbn')
+                ->get();
+        $pinjams = Peminjaman::where('kodeanggota', $anggota->kodeanggota)
+                ->where('tglkembali', NULL)
+                ->join('bukupengarang', 'peminjaman.kodebuku', '=', 'bukupengarang.kodebuku')
+                ->join('mpengarang', 'bukupengarang.kodepengarang', '=', 'mpengarang.kodepengarang')
+                ->join('buku', 'peminjaman.kodebuku', '=', 'buku.kodebuku')
+                ->select('buku.*', DB::raw('STRING_AGG(mpengarang.namapengarang, \', \') as namapengarang'))
+                ->groupBy('buku.kodebuku', 'buku.judulbuku', 'buku.tahun', 'buku.isbn')
+                ->get();
         $pinjamcount = $pinjams->count();
 
-        return view('user.index', compact('bukus', 'pinjams', 'pinjamcount'));
+        return view('user.index', compact('bukus', 'pinjams', 'pinjamcount', 'anggota'));
     }
 
     public function seller()

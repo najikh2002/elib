@@ -1,8 +1,16 @@
-<div class="flex flex-col gap-3 w-full">
-    <h3 class="font-semibold text-[20px] pb-4">Buku yang tersedia</h3>
-    <div class="flex flex-col gap-3 items-center md:items-start w-full">
-        <div class="flex flex-col md:flex-row justify-start items-center gap-6 md:items-start md:max-w-[90vw] overflow-x-auto">
-            @foreach ($bukus as $buku)
+@extends('layouts.app')
+
+@section('content')
+<div class="flex flex-col gap-3 px-3 md:px-[5%] py-3">
+    @if (count($data) > 0)
+        <h3 class="font-bold">Ditemukan {{ count($data) }} buku berdasarkan kategori {{ $jenisbuku }}</h3>
+    @else
+        <h3 class="font-bold">Tidak ditemukan buku berdasarkan kategori {{ $jenisbuku }}</h3>
+    @endif
+    <div class="flex md:grid flex-col sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 grid-auto-flow-dense justify-start items-center gap-12 md:items-start">
+        @if (count($data) > 0)
+            {{-- Display books here --}}
+            @foreach ($data as $buku)
                 <a href="/detail/{{ $buku->kodebuku }}" class="flex-shrink-0 flex flex-col justify-center items-center p-6 shadow-md hover:shadow-lg transition-all duration-150 bg-slate-100 w-full h-fit md:w-[300px] md:h-[500px]">
                     @if($buku->sampulbuku)
                         <img src="{{ asset("storage/$buku->sampulbuku") }}" alt="Sampul Buku" class="object-cover w-full h-full">
@@ -29,9 +37,8 @@
                     </p>
                 </a>
             @endforeach
-        </div>
+        @endif
     </div>
 </div>
 
-
-
+@endsection

@@ -84,29 +84,6 @@
                 </div>
             </div>
 
-            <!-- Laporan Peminjaman/Eksemplar -->
-            <div class="bg-white p-4 rounded-md shadow-md col-span-3">
-                <h2 class="text-lg font-semibold mb-2">Laporan Peminjaman/Eksemplar</h2>
-                <!-- Isi dengan filter Prodi, Tanggal, Bulan, Tahun dan data laporan peminjaman/eksemplar -->
-            </div>
-
-            <!-- Laporan Pembaca -->
-            <div class="bg-white p-4 rounded-md shadow-md col-span-3">
-                <h2 class="text-lg font-semibold mb-2">Laporan Pembaca</h2>
-                <!-- Isi dengan filter Prodi, Tanggal, Bulan, Tahun dan data laporan pembaca -->
-            </div>
-
-            <!-- Laporan Peminjam/Orang -->
-            <div class="bg-white p-4 rounded-md shadow-md col-span-3">
-                <h2 class="text-lg font-semibold mb-2">Laporan Peminjam/Orang</h2>
-                <!-- Isi dengan filter Prodi, Tanggal, Bulan, Tahun dan data laporan peminjam/orang -->
-            </div>
-
-            <!-- Laporan Pengunjung -->
-            <div class="bg-white p-4 rounded-md shadow-md col-span-3">
-                <h2 class="text-lg font-semibold mb-2">Laporan Pengunjung</h2>
-                <!-- Isi dengan filter Prodi, Tanggal, Bulan, Tahun dan data laporan pengunjung -->
-            </div>
         </div>
     </div>
 

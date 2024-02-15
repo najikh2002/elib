@@ -23,14 +23,15 @@ use Illuminate\Support\Facades\Route;
 //==================================================================================
 //==================================================================================
 
-Route::middleware('guest')->group(function () {
-    Route::get('/', [AuthController::class, 'home'])->name('home');
+Route::middleware(['isGuest'])->group(function () {
+    Route::get('/', [AuthController::class, 'home'])->name('welcome');
     Route::get('/login', [AuthController::class, 'login'])->name('login');
     Route::post('/login', [AuthController::class, 'authenticate'])->name('login');
     Route::get('/cari', [SearchController::class, 'caribuku']);
+    Route::get('/category/{jenisbuku}', [SearchController::class, 'carijenisbuku']);
 });
 
-Route::middleware('isLogin')->group(function () {
+Route::middleware(['isLogin'])->group(function () {
     Route::get("/user/pinjam/{id}", [UserController::class,"pinjambuku"])->name("pinjam");
     Route::delete("/user/hapus-sesi/{id}", [UserController::class,"batalpinjambuku"])->name("batal-pinjam");
     Route::get("/user/baca", [UserController::class,"bacabuku"])->name("baca");
@@ -39,6 +40,7 @@ Route::middleware('isLogin')->group(function () {
     Route::get('/profile', [UserController::class, 'profile']);
     Route::post('/logout',[AuthController::class,'logout']);
     Route::post('/profile-password',[UserController::class,'updatepasswordprofile']);
+    Route::post('/profile-photo',[UserController::class,'updatephotoprofile']);
 
     // detail buku
     Route::prefix('detail')->group(function () {
@@ -60,18 +62,11 @@ Route::middleware('isLogin')->middleware('isSellerApi')->group(function() {
         Route::get('/bahasa', [SellerController::class,'bahasa'])->name('bahasa');
         Route::get('/anggota', [SellerController::class,'anggota'])->name('anggota');
         Route::get('/sumberperolehan', [SellerController::class,'sumberperolehan'])->name('sumber-perolehan');
+        Route::get('/laporan-{laporan}', [SellerController::class,'laporan']);
     });
 });
 
 Route::middleware('isSellerApi')->group(function() {
-    // CHART SERVICE
-    Route::prefix('data')->group(function() {
-        Route::get('baca', [ChartController::class, 'baca']);
-        Route::get('totalpinjamanggota', [ChartController::class, 'totalpinjamanggota']);
-        Route::get('totalbacaperbuku', [ChartController::class, 'totalbacaperbuku']);
-        Route::get('totalanggota', [ChartController::class, 'totalanggota']);
-    });
-
     // IMPORT SERVICE
     Route::prefix('import')->group(function(){
         Route::post('anggota', [ImportController::class, 'importanggota']);

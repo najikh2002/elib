@@ -204,13 +204,9 @@
                     programstudi.push($(this).val());
                 });
 
-                // Mendapatkan data form
                 let token = $("meta[name='csrf-token']").attr("content");
-
-                // Initialize FormData
                 let formData = new FormData();
 
-                // Menambahkan setiap nilai dalam array kodepengarang dan programstudi
                 for (let i = 0; i < kodepengarang.length; i++) {
                     formData.append('kodepengarang[]', kodepengarang[i]);
                 }
@@ -219,7 +215,6 @@
                     formData.append('programstudi[]', programstudi[i]);
                 }
 
-                // Append other form data
                 formData.append("_token", token);
                 formData.append("kodesumberperolehan", $('#kodesumberperolehan').val());
                 formData.append("kodepenerbit", $('#kodepenerbit').val());

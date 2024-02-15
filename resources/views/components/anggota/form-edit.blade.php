@@ -132,7 +132,6 @@
         $(document).on('click','.show_anggota_editmodal',function(){
             let id = $(this).attr('id');
 
-            // Fungsi untuk menampilkan atau menyembunyikan foto saat input file berubah
             function updateFotoPreview(input) {
                 var currentFotoContainer = $('#currentFotoContainer');
                 var currentFoto = $('#currentFoto');

@@ -16,7 +16,7 @@ class IsGuest
     public function handle(Request $request, Closure $next): Response
     {
         if ($request->session()->has('user')) {
-            return redirect('/dashboard');
+            return redirect('/home');
         }
 
         return $next($request);
