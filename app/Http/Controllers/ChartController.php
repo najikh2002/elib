@@ -42,6 +42,17 @@ class ChartController extends Controller
         ]);
     }
 
+    public function totalpengunjung()
+    {
+        $totalpengunjung = DB::table('pengunjung')->get();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Data berhasil didapat',
+            'data' =>  $totalpengunjung
+        ]);
+    }
+
     public function totalbuku()
     {
         //

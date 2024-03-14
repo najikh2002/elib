@@ -6,12 +6,28 @@ use App\Models\Accapp;
 use App\Models\Anggota;
 use App\Models\Buku;
 use App\Models\Peminjaman;
+use App\Models\Pengunjung;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
+    public function refresh(Request $request)
+    {
+        $todayEntry = Pengunjung::firstOrNew([
+            'tanggal' => now()->toDateString(),
+        ]);
+
+        if (!$todayEntry->exists) {
+            $todayEntry->jumlah = 1;
+            $todayEntry->save();
+        } else {
+            $todayEntry->incrementJumlah();
+        }
+
+        return response()->noContent();
+    }
     public function profile(Request $request)
     {
         $kodeanggota = $request->session()->get("kodeanggota");

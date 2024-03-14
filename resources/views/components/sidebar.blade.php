@@ -25,22 +25,22 @@
         'Total Anggota',
         'Total Pengunjung',
         'Peminjaman (Detail)',
-        'Pembaca',
+        'Peminjaman',
         'Peminjam',
         'Pengunjung',
     ];
 
     $laporan_path = [
-        '/seller/pengarang',
+        '/seller/laporan-totalbaca',
         '/seller/laporan-totalbacaperuser',
         '/seller/laporan-totalbacaperkonten',
         '/seller/laporan-totalbuku',
-        '/seller/bahasa',
+        '/seller/laporan-totalanggota',
         '/seller/sumberperolehan',
         '/seller/laporan-peminjaman',
-        '/seller/2',
-        '/seller/3',
-        '/seller/4',
+        '/seller/laporan-peminjaman2',
+        '/seller/laporan-peminjam',
+        '/seller/laporan-pengunjung',
     ];
 
     $bukus = [

@@ -252,34 +252,48 @@
     </script>
 
     <script>
-        // Data contoh untuk Total Pengunjung
-        var totalPengunjungData = {
-            labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+        let totalPengunjung = {
+            labels: [],
             datasets: [{
-                label: 'Total Pengunjung',
-                data: [80, 100, 120, 130, 150, 170, 190, 200, 210, 220, 230, 250],
-                backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                borderColor: 'rgba(255, 99, 132, 1)',
+                label: 'Laporan Pengunjung',
+                data: [],
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderColor: 'rgba(75, 192, 192, 1)',
                 borderWidth: 1
             }]
         };
 
-        // Konfigurasi grafik
-        var totalPengunjungConfig = {
-            type: 'line',
-            data: totalPengunjungData,
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
-            }
-        };
+        async function fetchData() {
+            try {
+                const dataPengunjung = await getData('/data/totalpengunjung');
 
-        // Buat grafik Total Pengunjung
-        var totalPengunjungChart = new Chart(document.getElementById('totalPengunjungChart'), totalPengunjungConfig);
+                const jumlahPengunjung = dataPengunjung.map(entry => parseInt(entry.jumlah));
+                const tanggalPengunjung = dataPengunjung.map(entry => entry.tanggal); // Ganti Date.parse dengan langsung menggunakan tanggal
+
+                totalPengunjung.labels = tanggalPengunjung; // Mengganti tglpengunjung menjadi tanggalPengunjung
+                totalPengunjung.datasets[0].data = jumlahPengunjung; // Mengganti jmlbuku menjadi jumlahPengunjung
+
+                var laporanPengunjung = document.getElementById('totalPengunjungChart').getContext('2d');
+                var myChart = new Chart(laporanPengunjung, {
+                    type: 'line',
+                    data: totalPengunjung,
+                    options: {
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+
+            } catch(err) {
+                console.log(err);
+            }
+        }
+
+        fetchData();
     </script>
+
 
     <script>
         const prodi = [
@@ -349,7 +363,6 @@
             }
         };
 
-        // Buat grafik Total Buku
         var totalBukuChart = new Chart(document.getElementById('totalBukuChart'), totalBukuConfig);
 
         $('#totalBookDay').click(() => {

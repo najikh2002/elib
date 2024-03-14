@@ -25,6 +25,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware(['isGuest'])->group(function () {
     Route::get('/', [AuthController::class, 'home'])->name('welcome');
+    Route::get('/refresh', [UserController::class, 'refresh']);
     Route::get('/login', [AuthController::class, 'login'])->name('login');
     Route::post('/login', [AuthController::class, 'authenticate'])->name('login');
     Route::get('/cari', [SearchController::class, 'caribuku']);
@@ -67,6 +68,15 @@ Route::middleware('isLogin')->middleware('isSellerApi')->group(function() {
 });
 
 Route::middleware('isSellerApi')->group(function() {
+    // CHART
+    Route::prefix('data')->group(function(){
+        Route::get('totalpengunjung', [ChartController::class, 'totalpengunjung']);
+        Route::get('baca', [ChartController::class, 'baca']);
+        Route::get('totalpinjamanggota', [ChartController::class, 'totalpinjamanggota']);
+        Route::get('totalbacaperbuku', [ChartController::class, 'totalbacaperbuku']);
+        Route::get('totalanggota', [ChartController::class, 'totalanggota']);
+    });
+
     // IMPORT SERVICE
     Route::prefix('import')->group(function(){
         Route::post('anggota', [ImportController::class, 'importanggota']);

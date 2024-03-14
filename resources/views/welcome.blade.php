@@ -36,3 +36,19 @@
     </div>
 @endsection
 
+@push('script')
+<script>
+    $(document).ready(function() {
+        $.ajax({
+            url: '/refresh',
+            method: 'GET',
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            }
+        });
+    });
+</script>
+
+
+@endpush
+

@@ -49,4 +49,9 @@ class Anggota extends Authenticatable implements AuthenticatableContract
     {
         return $this->belongsTo(ProgramStudi::class, 'kodeps');
     }
+
+    public function total_baca()
+    {
+        return $this->hasMany(TotalBaca::class, 'kodeanggota', 'kodeanggota');
+    }
 }

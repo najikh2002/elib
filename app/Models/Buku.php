@@ -77,5 +77,10 @@ class Buku extends Model
     {
         return $this->hasMany(Peminjaman::class, 'kodebuku', 'kodebuku');
     }
+
+    public function total_baca()
+    {
+        return $this->hasMany(TotalBaca::class, 'kodebuku', 'kodebuku');
+    }
 }
 

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Buku;
+use App\Models\TotalBaca;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Response;
@@ -11,13 +12,21 @@ use setasign\Fpdi\Tcpdf\Fpdi;
 
 class ReadController extends Controller
 {
-    public function read_pdf($id)
+    public function read_pdf(Request $request, $id)
     {
         $buku = Buku::where('kodebuku', $id)->firstOrFail();
+        $anggota = $request->session()->get('anggota');
+
         $pdfPath = storage_path('app/' . $buku->filebuku);
 
         $pdf = file_get_contents($pdfPath);
         $countPages = preg_match_all("/\/Page\W/",$pdf,$dummy);
+
+        TotalBaca::create([
+            'kodebuku' => $id,
+            'kodeanggota' => $anggota->kodeanggota,
+            'tanggal' => now()
+        ]);
 
         $view_data = [
             'kodebuku' => $id,

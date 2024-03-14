@@ -1162,7 +1162,8 @@ class SellerController extends Controller
     public function laporan($laporan)
     {
         if($laporan == 'totalbaca') {
-            //
+            $data = DB::table('v_laporantotalbaca')->get();
+            return view('seller.page.totalbaca', compact(['data']));
         }
 
         if($laporan == 'totalbacaperuser') {
@@ -1181,7 +1182,8 @@ class SellerController extends Controller
         }
 
         if($laporan == 'totalanggota') {
-            //
+            $data = DB::table('v_totalanggota')->get();
+            return view('seller.page.totalanggota', compact(['data']));
         }
 
         if($laporan == 'totalpengunjung') {
@@ -1194,11 +1196,18 @@ class SellerController extends Controller
         }
 
         if($laporan == 'peminjam') {
-            //
+            $data = DB::table('v_laporanpeminjam')->get();
+            return view('seller.page.peminjam', compact(['data']));
+        }
+
+        if($laporan == 'peminjaman2') {
+            $data = DB::table('v_laporanpeminjaman')->get();
+            return view('seller.page.peminjaman2', compact(['data']));
         }
 
         if($laporan == 'pengunjung') {
-            //
+            $data = DB::table('pengunjung')->get();
+            return view('seller.page.pengunjung', compact(['data']));
         }
     }
 }
