@@ -295,7 +295,9 @@
 
                         buku = data.buku;
                         databuku = data.databuku;
-                        let coverBook = `http://localhost:8000/storage/${buku.sampulbuku}`
+                        let baseUrl = window.location.origin;
+
+                        let coverBook = `${baseUrl}/storage/${buku.sampulbuku}`
 
                         $('#sampulbuku').attr('src', coverBook);
                         $('#judulbuku_edit').val(buku.judulbuku);
